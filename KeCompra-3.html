@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="KeCompra">
+  <title>KeCompra 🛒</title>
+  <style>
+    :root{
+      --accent:#FF7A1A;
+      --accent2:#FF9D52;
+      --bg:#f5f5f7;
+      --soft:color-mix(in srgb, var(--accent) 7%, #fff);
+      --soft2:color-mix(in srgb, var(--accent) 4%, #fff);
+      --chip:color-mix(in srgb, var(--accent) 6%, #fff);
+      --line:color-mix(in srgb, var(--accent) 16%, #e2e2e6);
+      --line-dash:color-mix(in srgb, var(--accent) 22%, #d6d6da);
+      --dark1:#1a1a1a;
+      --dark2:color-mix(in srgb, var(--accent) 20%, #141414);
+      --avatar-bg:color-mix(in srgb, var(--accent) 22%, #1a1a1a);
+      --glow:color-mix(in srgb, var(--accent) 45%, transparent);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+    body{background:var(--bg);font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;min-height:100vh;}
+    #home-header{background:linear-gradient(160deg,var(--dark1) 58%,var(--dark2));padding:44px 20px 22px;text-align:center;position:relative;}
+    #home-header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--accent),transparent);}
+    .keko-avatar{width:76px;height:76px;border-radius:50%;margin:0 auto 12px;background:var(--avatar-bg);box-shadow:0 6px 24px var(--glow);border:3px solid color-mix(in srgb, var(--accent) 40%, transparent);display:flex;align-items:center;justify-content:center;}
+    .ke-logo{font-size:34px;font-weight:800;color:var(--accent);letter-spacing:-1px;}
+    .ke-logo span{color:var(--accent2);}
+    .keko-name{font-size:26px;font-weight:800;color:#fff;letter-spacing:0.5px;}
+    .keko-name span{color:var(--accent);}
+    .keko-sub{font-size:11px;color:#777;margin-top:5px;letter-spacing:1.5px;text-transform:uppercase;}
+    .keko-badge{display:inline-block;margin-top:14px;background:color-mix(in srgb, var(--accent) 15%, transparent);border:1px solid color-mix(in srgb, var(--accent) 35%, transparent);border-radius:20px;padding:6px 18px;font-size:12px;color:var(--accent);font-weight:700;}
+    #theme-row{display:flex;gap:11px;justify-content:center;margin-top:18px;}
+    .theme-dot{width:26px;height:26px;border-radius:50%;border:2px solid transparent;cursor:pointer;padding:0;transition:transform .15s;}
+    .theme-dot.sel{border-color:#fff;transform:scale(1.15);box-shadow:0 0 0 2px rgba(255,255,255,0.22);}
+    #lista-header{background:var(--dark1);padding:16px 16px 0;position:sticky;top:0;z-index:10;display:none;}
+    #lista-header-top{display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+    #back-btn{background:rgba(255,255,255,0.1);border:none;border-radius:8px;color:#fff;cursor:pointer;padding:6px 10px;font-size:14px;font-family:inherit;}
+    .lista-title-text{color:#fff;font-size:16px;font-weight:700;flex:1;}
+    #counter{color:var(--accent);font-size:13px;font-weight:600;white-space:nowrap;}
+    #tabs{display:flex;gap:4px;margin-top:10px;}
+    .tab{flex:1;padding:8px;border:none;cursor:pointer;border-radius:8px 8px 0 0;font-weight:600;font-size:12px;background:transparent;color:#888;font-family:inherit;}
+    .tab.active{background:var(--bg);color:var(--dark1);}
+    #home-view{padding:16px 16px 100px;}
+    .section-title{font-size:11px;color:#999;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+    .lista-card{background:#fff;border-radius:14px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,0.06);overflow:hidden;display:flex;align-items:center;}
+    .lista-card-btn{flex:1;display:flex;align-items:center;gap:12px;padding:14px;background:none;border:none;cursor:pointer;text-align:left;}
+    .lista-icon{font-size:22px;width:44px;height:44px;background:var(--soft);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .lista-info{flex:1;}
+    .lista-name{font-size:15px;font-weight:700;color:var(--dark1);}
+    .lista-sub{font-size:12px;color:#999;margin-top:2px;}
+    .lista-badge{background:var(--accent);color:#fff;border-radius:12px;padding:2px 10px;font-size:12px;font-weight:700;}
+    .lista-actions{display:flex;gap:4px;padding-right:12px;}
+    .icon-btn{width:32px;height:32px;border-radius:8px;border:none;background:var(--soft);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
+    .rename-row{padding:12px;display:flex;gap:8px;align-items:center;width:100%;}
+    .rename-row input{flex:1;padding:8px 12px;border-radius:8px;border:1.5px solid var(--accent);font-size:15px;outline:none;font-family:inherit;}
+    .rename-ok{padding:8px 14px;background:var(--accent);border:none;border-radius:8px;color:#fff;font-weight:700;cursor:pointer;font-family:inherit;}
+    .rename-cancel{padding:8px 10px;background:var(--soft);border:none;border-radius:8px;color:#666;cursor:pointer;font-family:inherit;}
+    #crear-panel{background:#fff;border-radius:14px;padding:16px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,0.06);display:none;}
+    #crear-panel h3{font-weight:700;font-size:14px;color:var(--dark1);margin-bottom:12px;}
+    #icon-selector{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+    .icon-opt{width:36px;height:36px;border-radius:8px;border:none;background:var(--soft);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;}
+    .icon-opt.selected{background:color-mix(in srgb, var(--accent) 15%, #fff);outline:2px solid var(--accent);}
+    #crear-panel input[type=text]{width:100%;padding:10px 14px;border-radius:8px;border:1.5px solid var(--line);font-size:15px;margin-bottom:12px;outline:none;font-family:inherit;}
+    #crear-panel input[type=text]:focus{border-color:var(--accent);}
+    #crear-btns{display:flex;gap:8px;}
+    #crear-cancel{flex:1;padding:10px;border-radius:8px;border:1px solid var(--line);background:#fff;color:#666;font-size:14px;cursor:pointer;font-family:inherit;}
+    #crear-ok{flex:2;padding:10px;border-radius:8px;border:none;background:var(--accent);color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;}
+    #nueva-lista-btn{width:100%;padding:14px;border-radius:14px;border:2px dashed var(--line-dash);background:transparent;color:#aaa;font-size:14px;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;}
+    #lista-view{display:none;}
+    #content{padding:16px 16px 100px;}
+    #resumen-gasto{background:linear-gradient(135deg,var(--dark1),var(--dark2));border-radius:14px;padding:14px 16px;margin-bottom:16px;display:none;border:1px solid color-mix(in srgb, var(--accent) 20%, transparent);}
+    .resumen-row{display:flex;justify-content:space-between;align-items:center;}
+    .resumen-label{color:#888;font-size:12px;}
+    .resumen-total{color:var(--accent);font-size:24px;font-weight:800;}
+    .resumen-sub{color:#666;font-size:12px;margin-top:4px;}
+    .group{margin-bottom:16px;}
+    .group-header{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#fff;border-radius:10px 10px 0 0;border-bottom:2px solid var(--accent);}
+    .group-label{font-weight:700;font-size:14px;color:var(--dark1);}
+    .group-pending{margin-left:auto;font-size:11px;color:#999;background:var(--soft);border-radius:10px;padding:2px 8px;}
+    .group-items{background:#fff;border-radius:0 0 10px 10px;overflow:hidden;}
+    .item{display:flex;align-items:center;padding:10px 14px;border-bottom:1px solid var(--soft);background:#fff;}
+    .item:last-child{border-bottom:none;}
+    .item.done{background:var(--soft2);}
+    .check-btn{width:22px;height:22px;border-radius:50%;flex-shrink:0;border:2px solid #ccc;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;}
+    .check-btn.checked{border-color:var(--accent);background:var(--accent);}
+    .item-main{margin-left:10px;flex:1;min-width:0;}
+    .item-name{font-size:14px;color:var(--dark1);}
+    .item-name.done{color:#aaa;text-decoration:line-through;}
+    .item-price-row{display:flex;align-items:center;gap:6px;margin-top:3px;}
+    .price-input{width:60px;padding:2px 6px;border-radius:6px;border:1px solid var(--line);font-size:12px;color:var(--accent);font-weight:600;font-family:inherit;outline:none;background:var(--soft2);}
+    .price-input:focus{border-color:var(--accent);}
+    .price-label{font-size:11px;color:#bbb;}
+    .tienda-badge{font-size:10px;color:#888;background:var(--soft);border-radius:6px;padding:2px 5px;}
+    .qty-ctrl{display:flex;align-items:center;gap:4px;margin-left:6px;flex-shrink:0;}
+    .qty-btn{width:20px;height:20px;border-radius:50%;border:1px solid #ddd;background:transparent;cursor:pointer;font-size:14px;color:#888;display:flex;align-items:center;justify-content:center;padding:0;}
+    .qty-val{font-size:13px;font-weight:600;color:var(--accent);min-width:14px;text-align:center;}
+    .del-btn{background:none;border:none;cursor:pointer;color:#ddd;font-size:18px;padding:0 0 0 6px;line-height:1;}
+    #actions{display:flex;gap:8px;margin-top:8px;}
+    .action-btn{padding:10px 16px;background:#fff;border:1px solid var(--line);border-radius:8px;color:#999;font-size:13px;cursor:pointer;font-family:inherit;}
+    .action-btn.flex1{flex:1;}
+    #empty-lista{text-align:center;padding:48px 20px;color:#aaa;display:none;}
+    #empty-lista .ei{font-size:40px;margin-bottom:12px;}
+    #stats-view{display:none;padding:16px 16px 100px;}
+    .per-btn{flex:1;padding:9px 4px;border:1px solid var(--line);border-radius:10px;background:#fff;color:#888;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;}
+    .per-btn.per-active{background:var(--accent);color:#fff;border-color:var(--accent);}
+    #stats-rango input{flex:1;padding:8px;border:1px solid var(--line);border-radius:10px;font-family:inherit;font-size:13px;color:var(--dark1);outline:none;background:#fff;}
+    .stats-card{background:#fff;border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,0.06);}
+    .stats-card h3{font-size:12px;color:#999;font-weight:700;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.5px;}
+    .stats-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--soft);}
+    .stats-row:last-child{border-bottom:none;}
+    .stats-name{font-size:14px;color:var(--dark1);}
+    .stats-amount{font-size:14px;font-weight:700;color:var(--accent);}
+    .stats-big{font-size:36px;font-weight:800;color:var(--accent);text-align:center;padding:8px 0;}
+    .stats-big-label{font-size:12px;color:#999;text-align:center;}
+    #fab{position:fixed;bottom:24px;right:24px;width:56px;height:56px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;font-size:28px;color:#fff;box-shadow:0 4px 16px var(--glow);display:none;align-items:center;justify-content:center;z-index:100;}
+    #add-panel{position:fixed;bottom:0;left:0;right:0;background:#fff;border-radius:20px 20px 0 0;box-shadow:0 -4px 24px rgba(0,0,0,0.12);padding:20px;z-index:200;display:none;}
+    #add-panel h3{font-weight:700;font-size:15px;margin-bottom:14px;color:var(--dark1);}
+    #new-name{width:100%;padding:10px 14px;border-radius:8px;border:1.5px solid var(--line);font-size:15px;margin-bottom:10px;outline:none;font-family:inherit;}
+    #new-name:focus{border-color:var(--accent);}
+    #selects{display:flex;gap:8px;margin-bottom:10px;}
+    #selects select{flex:1;padding:8px;border-radius:8px;border:1.5px solid var(--line);font-size:12px;background:#fff;font-family:inherit;}
+    #add-extras{display:flex;gap:8px;margin-bottom:14px;align-items:center;}
+    #new-price-wrap{display:flex;align-items:center;gap:4px;flex:1;}
+    #new-price-wrap label{font-size:12px;color:#999;white-space:nowrap;}
+    #new-price{width:80px;padding:6px 10px;border-radius:8px;border:1.5px solid var(--line);font-size:14px;font-family:inherit;outline:none;}
+    #new-price:focus{border-color:var(--accent);}
+    #qty-row{display:flex;align-items:center;gap:8px;}
+    #qty-row span{font-size:12px;color:#999;}
+    .qty-btn-lg{width:28px;height:28px;border-radius:50%;border:1px solid #ddd;background:transparent;cursor:pointer;font-size:16px;font-family:inherit;}
+    #new-qty-val{font-weight:700;color:var(--accent);font-size:16px;min-width:20px;text-align:center;}
+    #panel-btns{display:flex;gap:8px;}
+    #btn-cancel{flex:1;padding:12px;border-radius:8px;border:1px solid var(--line);background:#fff;color:#666;font-size:14px;cursor:pointer;font-family:inherit;}
+    #btn-add{flex:2;padding:12px;border-radius:8px;border:none;background:var(--accent);color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;}
+    #btn-finalizar{width:100%;padding:14px;border-radius:12px;border:1px solid color-mix(in srgb, var(--accent) 30%, transparent);background:linear-gradient(135deg,var(--dark1),var(--dark2));color:var(--accent);font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:8px;}
+    #modal-pago{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:300;display:none;align-items:flex-end;justify-content:center;}
+    #modal-pago.open{display:flex;}
+    #modal-pago-inner{background:#fff;border-radius:20px 20px 0 0;padding:24px;width:100%;max-width:480px;}
+    #modal-pago-inner h3{font-size:16px;font-weight:700;color:var(--dark1);margin-bottom:6px;}
+    #modal-pago-inner p{font-size:13px;color:#999;margin-bottom:20px;}
+    .pago-btn{width:100%;padding:14px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font-size:15px;font-family:inherit;cursor:pointer;margin-bottom:10px;text-align:left;display:flex;align-items:center;gap:10px;}
+    .pago-btn:active{background:var(--soft);}
+    #modal-pago-cancel{width:100%;padding:12px;border-radius:12px;border:none;background:var(--soft);color:#666;font-size:14px;cursor:pointer;font-family:inherit;margin-top:4px;}
+    .historial-card{background:#fff;border-radius:14px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,0.06);}
+    .historial-fecha{font-size:12px;color:#999;margin-bottom:4px;}
+    .historial-row{display:flex;justify-content:space-between;align-items:center;}
+    .historial-tienda{font-size:14px;font-weight:700;color:var(--dark1);}
+    .historial-total{font-size:18px;font-weight:800;color:var(--accent);}
+    .historial-pago{font-size:12px;color:#888;margin-top:3px;}
+    .historial-empty{text-align:center;padding:40px 20px;color:#bbb;}
+    .historial-empty .ei{font-size:36px;margin-bottom:10px;}
+    #fab-voice{position:fixed;bottom:92px;right:24px;width:48px;height:48px;border-radius:50%;background:var(--dark1);border:2px solid var(--accent);cursor:pointer;font-size:20px;color:#fff;box-shadow:0 4px 16px rgba(0,0,0,0.3);display:none;align-items:center;justify-content:center;z-index:100;transition:all 0.2s;}
+    #fab-voice.listening{background:var(--accent);animation:pulse 1s infinite;}
+    #voice-toast{position:fixed;bottom:160px;right:16px;left:16px;background:var(--dark1);color:#fff;border-radius:14px;padding:14px 18px;font-size:14px;text-align:center;z-index:200;display:none;border:1px solid color-mix(in srgb, var(--accent) 30%, transparent);}
+    @keyframes pulse{0%{transform:scale(1);}50%{transform:scale(1.1);}100%{transform:scale(1);}}
+    #tiendas-btn{width:100%;padding:14px;border-radius:14px;border:1.5px solid var(--line);background:#fff;color:var(--accent);font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:10px;}
+    #tiendas-panel{background:#fff;border-radius:14px;padding:16px;margin-top:10px;box-shadow:0 1px 4px rgba(0,0,0,0.06);display:none;}
+    .tienda-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--soft);}
+    .tienda-item:last-of-type{border-bottom:none;}
+    .ti-icon{font-size:18px;}
+    .ti-name{flex:1;font-size:14px;color:var(--dark1);}
+    .tienda-del{width:28px;height:28px;border-radius:8px;border:none;background:var(--soft);color:#999;font-size:18px;cursor:pointer;line-height:1;}
+    .add-tienda-box{margin-top:14px;border-top:2px solid var(--soft);padding-top:14px;}
+    .add-tienda-box input{width:100%;padding:10px 14px;border-radius:8px;border:1.5px solid var(--line);font-size:15px;margin-bottom:10px;outline:none;font-family:inherit;}
+    .add-tienda-box input:focus{border-color:var(--accent);}
+    #tienda-icon-selector{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+    .add-tienda-ok{width:100%;padding:12px;border-radius:8px;border:none;background:var(--accent);color:#fff;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;}
+    #tiendas-cerrar{width:100%;padding:10px;border-radius:8px;border:1px solid var(--line);background:#fff;color:#666;font-size:14px;cursor:pointer;font-family:inherit;margin-top:10px;}
+    @media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important;}}
+  </style>
+</head>
+<body>
+
+<div id="home-header">
+  <div class="keko-avatar"><div class="ke-logo">Ke<span>.</span></div></div>
+  <div class="keko-name">Ke<span>Compra</span></div>
+  <div class="keko-sub">Mi lista de la compra</div>
+  <div class="keko-badge">🛒 Mis listas</div>
+  <div id="theme-row"></div>
+</div>
+
+<div id="lista-header">
+  <div id="lista-header-top">
+    <button id="back-btn" onclick="goHome()">← Listas</button>
+    <span style="font-size:16px" id="header-icon">🛒</span>
+    <span class="lista-title-text" id="header-title-text">Lista</span>
+    <span id="counter">0/0</span>
+  </div>
+  <div id="tabs">
+    <button class="tab active" onclick="setTab('seccion')">📦 Sección</button>
+    <button class="tab" onclick="setTab('tienda')">🏪 Tienda</button>
+    <button class="tab" onclick="setTab('stats')">📊 Gastos</button>
+    <button class="tab" onclick="setTab('historial')">📅 Historial</button>
+  </div>
+</div>
+
+<div id="home-view">
+  <div class="section-title">Mis listas</div>
+  <div id="listas-container"></div>
+  <div id="crear-panel">
+    <h3>Nueva lista</h3>
+    <div id="icon-selector"></div>
+    <input type="text" id="crear-nombre" placeholder="Nombre de la lista..." onkeydown="if(event.key==='Enter')confirmarCrear();if(event.key==='Escape')cancelarCrear()">
+    <div id="crear-btns">
+      <button id="crear-cancel" onclick="cancelarCrear()">Cancelar</button>
+      <button id="crear-ok" onclick="confirmarCrear()">Crear lista</button>
+    </div>
+  </div>
+  <button id="nueva-lista-btn" onclick="mostrarCrear()">
+    <span style="font-size:20px;color:var(--accent)">+</span> Nueva lista
+  </button>
+  <button id="tiendas-btn" onclick="abrirTiendas()">🏪 Gestionar mis tiendas</button>
+  <div id="tiendas-panel">
+    <div class="section-title">Mis tiendas</div>
+    <div id="tiendas-list"></div>
+    <div class="add-tienda-box">
+      <input type="text" id="nueva-tienda-nombre" placeholder="Nueva tienda (ej. Aldi)" onkeydown="if(event.key==='Enter')addTienda()">
+      <div id="tienda-icon-selector"></div>
+      <button class="add-tienda-ok" onclick="addTienda()">➕ Añadir tienda</button>
+    </div>
+    <button id="tiendas-cerrar" onclick="cerrarTiendas()">Cerrar</button>
+  </div>
+</div>
+
+<div id="lista-view">
+  <div id="content">
+    <div id="resumen-gasto">
+      <div class="resumen-row"><span class="resumen-label">💰 Total gastado</span><span class="resumen-total" id="total-gastado">0,00 €</span></div>
+      <div class="resumen-sub" id="resumen-sub"></div>
+    </div>
+    <div id="empty-lista"><div class="ei">🛒</div><div>Lista vacía — pulsa + para añadir</div></div>
+    <div id="groups"></div>
+    <div id="actions">
+      <button class="action-btn flex1" id="btn-clear" onclick="clearDone()" style="display:none">🗑 Limpiar</button>
+      <button class="action-btn" onclick="vaciarLista()">↺ Vaciar</button>
+    </div>
+    <button id="btn-finalizar" onclick="abrirModalPago()">✅ Finalizar compra</button>
+  </div>
+</div>
+
+<div id="historial-view" style="display:none;padding:16px 16px 100px;">
+  <div id="historial-container"></div>
+</div>
+
+<div id="modal-pago">
+  <div id="modal-pago-inner">
+    <h3>✅ Finalizar compra</h3>
+    <p id="modal-pago-total">Total: 0,00 €</p>
+    <button class="pago-btn" onclick="finalizarCompra('Tarjeta')">💳 Tarjeta</button>
+    <button class="pago-btn" onclick="finalizarCompra('Efectivo')">💵 Efectivo</button>
+    <button class="pago-btn" onclick="finalizarCompra('Bizum')">📲 Bizum</button>
+    <button id="modal-pago-cancel" onclick="cerrarModalPago()">Cancelar</button>
+  </div>
+</div>
+
+<div id="stats-view">
+  <div id="stats-periodos" style="display:flex;gap:6px;margin-bottom:12px;">
+    <button class="per-btn" data-p="semana" onclick="setStatsPeriodo('semana')">Semana</button>
+    <button class="per-btn" data-p="mes" onclick="setStatsPeriodo('mes')">Mes</button>
+    <button class="per-btn" data-p="todo" onclick="setStatsPeriodo('todo')">Todo</button>
+    <button class="per-btn" data-p="rango" onclick="setStatsPeriodo('rango')">Fechas</button>
+  </div>
+  <div id="stats-rango" style="display:none;gap:8px;margin-bottom:14px;align-items:center;">
+    <input type="date" id="stats-desde" onchange="statsDesde=this.value;renderStats()">
+    <span style="color:#999;font-size:12px;">a</span>
+    <input type="date" id="stats-hasta" onchange="statsHasta=this.value;renderStats()">
+  </div>
+  <div class="stats-card">
+    <h3>💰 Total del periodo</h3>
+    <div class="stats-big" id="stats-total">0,00 €</div>
+    <div class="stats-big-label" id="stats-label">Sin compras</div>
+  </div>
+  <div class="stats-card"><h3>🏪 Por tienda</h3><div id="stats-tiendas"></div></div>
+  <div class="stats-card"><h3>💳 Por forma de pago</h3><div id="stats-pago"></div></div>
+</div>
+
+<button id="fab" onclick="openPanel()">+</button>
+<button id="fab-voice" onclick="startVoice()">🎙️</button>
+<div id="voice-toast"></div>
+
+<div id="add-panel">
+  <h3>➕ Añadir producto</h3>
+  <input type="text" id="new-name" placeholder="Nombre del producto..." onkeydown="if(event.key==='Enter')addItem()">
+  <div id="selects">
+    <select id="new-section"></select>
+    <select id="new-tienda"></select>
+  </div>
+  <div id="add-extras">
+    <div id="new-price-wrap"><label>💶 Precio:</label><input type="number" id="new-price" placeholder="0,00" step="0.01" min="0"></div>
+    <div id="qty-row">
+      <span>Cant:</span>
+      <button class="qty-btn-lg" onclick="changeNewQty(-1)">−</button>
+      <span id="new-qty-val">1</span>
+      <button class="qty-btn-lg" onclick="changeNewQty(1)">+</button>
+    </div>
+  </div>
+  <div id="panel-btns">
+    <button id="btn-cancel" onclick="closePanel()">Cancelar</button>
+    <button id="btn-add" onclick="addItem()">Añadir</button>
+  </div>
+</div>
+
+<script>
+// ── TEMA / COLOR ──────────────────────────────────────────────
+const THEMES={naranja:['#FF7A1A','#FF9D52'],lila:['#A855F7','#C084FC'],azul:['#3B82F6','#60A5FA'],verde:['#10B981','#34D399'],rosa:['#EC4899','#F472B6'],rojo:['#EF4444','#F87171']};
+function loadTheme(){try{return localStorage.getItem('kecompra_theme')||'naranja';}catch{return 'naranja';}}
+function applyTheme(name){
+  const t=THEMES[name]||THEMES.naranja;
+  document.documentElement.style.setProperty('--accent',t[0]);
+  document.documentElement.style.setProperty('--accent2',t[1]);
+  try{localStorage.setItem('kecompra_theme',name);}catch{}
+  renderThemePicker(name);
+}
+function renderThemePicker(cur){
+  const c=document.getElementById('theme-row');if(!c)return;
+  c.innerHTML=Object.entries(THEMES).map(([k,v])=>`<button class="theme-dot ${k===cur?'sel':''}" style="background:${v[0]}" onclick="applyTheme('${k}')" aria-label="Color ${k}"></button>`).join('');
+}
+
+const SECTIONS=[{id:"limpieza",label:"Limpieza",icon:"🧹"},{id:"lacteos",label:"Lácteos",icon:"🥛"},{id:"alimentacion",label:"Alimentación",icon:"🥫"},{id:"fruta",label:"Fruta / Verdura",icon:"🥦"},{id:"charcuteria",label:"Charcutería",icon:"🥩"},{id:"farmacia",label:"Farmacia",icon:"💊"},{id:"ferreteria",label:"Ferretería",icon:"🔧"},{id:"bazar",label:"Bazar / Chinos",icon:"🏪"},{id:"carniceria",label:"Carnicería",icon:"🥩"},{id:"panaderia",label:"Panadería",icon:"🥖"},{id:"pescaderia",label:"Pescadería",icon:"🐟"},{id:"bebidas",label:"Bebidas",icon:"🍷"}];
+const TIENDAS_DEFAULT=[{id:"mercadona",label:"Mercadona",icon:"🟡"},{id:"lidl",label:"Lidl",icon:"🔵"},{id:"dia",label:"Día",icon:"🔴"},{id:"carrefour",label:"Carrefour",icon:"🟠"},{id:"aldi",label:"Aldi",icon:"🟢"},{id:"farmacia",label:"Farmacia",icon:"⚕️"},{id:"otra",label:"Otra tienda",icon:"🛒"}];
+function loadTiendas(){try{const s=localStorage.getItem("kecompra_tiendas");if(s)return JSON.parse(s);}catch(e){}return JSON.parse(JSON.stringify(TIENDAS_DEFAULT));}
+function saveTiendas(){try{localStorage.setItem("kecompra_tiendas",JSON.stringify(TIENDAS));}catch(e){}}
+let TIENDAS=loadTiendas();
+const TIENDA_ICONS=["🔴","🟠","🟡","🟢","🔵","🟣","🛒","🏪","🥖","🧴","⚕️","🍊"];
+let selectedTiendaIcon="🛒";
+const LIST_ICONS=["🛒","🧹","💊","🥗","🎉","🏠","🍷","🐾"];
+
+let lists=[],activeListId=null,activeTab="seccion",newQty=1,selectedIcon="🛒",renamingId=null;
+
+function load(){
+  try{
+    const s=localStorage.getItem("kecompra_v3");
+    if(s){lists=JSON.parse(s);return;}
+    lists=[{id:"lista-1",name:"Compra semanal",icon:"🛒",items:[]}];
+  }catch{lists=[{id:"lista-1",name:"Compra semanal",icon:"🛒",items:[]}];}
+}
+function save(){try{localStorage.setItem("kecompra_v3",JSON.stringify(lists));}catch{}}
+function getList(){return lists.find(l=>l.id===activeListId);}
+function fmt(n){return Number(n).toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2})+' €';}
+
+function renderHome(){
+  document.getElementById('listas-container').innerHTML=lists.map(lista=>{
+    const pending=lista.items.filter(i=>!i.done).length,total=lista.items.length;
+    const gastado=lista.items.filter(i=>i.done&&i.price>0).reduce((s,i)=>s+(i.price*i.qty),0);
+    const badge=pending>0?`<span class="lista-badge">${pending}</span>`:total>0?`<span style="font-size:18px">✅</span>`:'';
+    const sub=total===0?'Lista vacía':`${pending} de ${total} pendientes${gastado>0?' · '+fmt(gastado):''}`;
+    if(renamingId===lista.id)return`<div class="lista-card"><div class="rename-row"><input id="rename-input" value="${lista.name}" onkeydown="if(event.key==='Enter')confirmRename();if(event.key==='Escape')cancelRename()"><button class="rename-ok" onclick="confirmRename()">OK</button><button class="rename-cancel" onclick="cancelRename()">✕</button></div></div>`;
+    return`<div class="lista-card"><button class="lista-card-btn" onclick="openList('${lista.id}')"><div class="lista-icon">${lista.icon}</div><div class="lista-info"><div class="lista-name">${lista.name}</div><div class="lista-sub">${sub}</div></div>${badge}</button><div class="lista-actions"><button class="icon-btn" onclick="startRename('${lista.id}')">✏️</button>${lists.length>1?`<button class="icon-btn" onclick="deleteList('${lista.id}')">🗑</button>`:''}</div></div>`;
+  }).join('');
+  if(renamingId)setTimeout(()=>{const inp=document.getElementById('rename-input');if(inp){inp.focus();inp.select();}},50);
+}
+
+function openList(id){
+  activeListId=id;const lista=getList();
+  document.getElementById('home-header').style.display='none';
+  document.getElementById('home-view').style.display='none';
+  document.getElementById('lista-header').style.display='block';
+  document.getElementById('lista-view').style.display='block';
+  document.getElementById('stats-view').style.display='none';
+  document.getElementById('fab').style.display='flex';
+  document.getElementById('fab-voice').style.display='flex';
+  document.getElementById('header-icon').textContent=lista.icon;
+  document.getElementById('header-title-text').textContent=' '+lista.name;
+  activeTab='seccion';
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===0));
+  renderLista();
+}
+function goHome(){
+  activeListId=null;
+  document.getElementById('home-header').style.display='block';
+  document.getElementById('home-view').style.display='block';
+  document.getElementById('lista-header').style.display='none';
+  document.getElementById('lista-view').style.display='none';
+  document.getElementById('stats-view').style.display='none';
+  document.getElementById('historial-view').style.display='none';
+  document.getElementById('fab').style.display='none';
+  document.getElementById('fab-voice').style.display='none';
+  renderHome();
+}
+function startRename(id){renamingId=id;renderHome();}
+function cancelRename(){renamingId=null;renderHome();}
+function confirmRename(){const val=document.getElementById('rename-input')?.value.trim();if(val)lists=lists.map(l=>l.id===renamingId?{...l,name:val}:l);renamingId=null;save();renderHome();}
+function deleteList(id){const lista=lists.find(l=>l.id===id);if(confirm(`¿Eliminar "${lista.name}"?`)){lists=lists.filter(l=>l.id!==id);save();renderHome();}}
+function mostrarCrear(){document.getElementById('crear-panel').style.display='block';document.getElementById('nueva-lista-btn').style.display='none';document.getElementById('crear-nombre').value='';selectedIcon='🛒';renderIconSelector();setTimeout(()=>document.getElementById('crear-nombre').focus(),100);}
+function cancelarCrear(){document.getElementById('crear-panel').style.display='none';document.getElementById('nueva-lista-btn').style.display='flex';}
+function confirmarCrear(){const name=document.getElementById('crear-nombre').value.trim();if(!name)return;lists.push({id:'lista-'+Date.now(),name,icon:selectedIcon,items:[]});save();cancelarCrear();renderHome();}
+function renderIconSelector(){document.getElementById('icon-selector').innerHTML=LIST_ICONS.map(ic=>`<button class="icon-opt ${ic===selectedIcon?'selected':''}" onclick="selectIcon('${ic}')">${ic}</button>`).join('');}
+function selectIcon(ic){selectedIcon=ic;renderIconSelector();}
+
+function setTab(tab){
+  activeTab=tab;
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['seccion','tienda','stats','historial'][i]===tab));
+  document.getElementById('lista-view').style.display='none';
+  document.getElementById('stats-view').style.display='none';
+  document.getElementById('historial-view').style.display='none';
+  document.getElementById('fab').style.display='none';
+  document.getElementById('fab-voice').style.display='none';
+  if(tab==='stats'){document.getElementById('stats-view').style.display='block';renderStats();}
+  else if(tab==='historial'){document.getElementById('historial-view').style.display='block';renderHistorial();}
+  else{document.getElementById('lista-view').style.display='block';document.getElementById('fab').style.display='flex';document.getElementById('fab-voice').style.display='flex';renderLista();}
+}
+
+function renderLista(){
+  const lista=getList();if(!lista)return;
+  const items=lista.items,pending=items.filter(i=>!i.done).length;
+  document.getElementById('counter').textContent=`${pending}/${items.length}`;
+  document.getElementById('btn-clear').style.display=items.some(i=>i.done)?'block':'none';
+  const gastado=items.filter(i=>i.done&&i.price>0).reduce((s,i)=>s+(i.price*i.qty),0);
+  const res=document.getElementById('resumen-gasto');
+  if(gastado>0){res.style.display='block';document.getElementById('total-gastado').textContent=fmt(gastado);const nd=items.filter(i=>i.done).length;document.getElementById('resumen-sub').textContent=`${nd} producto${nd!==1?'s':''} comprado${nd!==1?'s':''}`;}
+  else res.style.display='none';
+  const gBy=activeTab==='seccion'?SECTIONS:TIENDAS,gKey=activeTab==='seccion'?'section':'tienda';
+  const groups=gBy.map(g=>({...g,items:items.filter(i=>i[gKey]===g.id)})).filter(g=>g.items.length>0);
+  document.getElementById('empty-lista').style.display=groups.length===0?'block':'none';
+  document.getElementById('groups').innerHTML=groups.map(group=>{
+    const pc=group.items.filter(i=>!i.done).length;
+    return`<div class="group"><div class="group-header"><span style="font-size:16px">${group.icon}</span><span class="group-label">&nbsp;${group.label}</span><span class="group-pending">${pc} pendientes</span></div><div class="group-items">${group.items.map(item=>{
+      const t=TIENDAS.find(t=>t.id===item.tienda),badge=activeTab==='seccion'&&t?`<span class="tienda-badge">${t.icon}</span>`:'';
+      return`<div class="item ${item.done?'done':''}"><button class="check-btn ${item.done?'checked':''}" onclick="toggle(${item.id})">${item.done?'<svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l2.5 2.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>':''}</button><div class="item-main"><div class="item-name ${item.done?'done':''}">${item.name}</div><div class="item-price-row"><input class="price-input" type="number" value="${item.price>0?item.price:''}" placeholder="€" step="0.01" min="0" onchange="updatePrice(${item.id},this.value)" onclick="this.select()"><span class="price-label">€/ud</span>${badge}</div></div><div class="qty-ctrl"><button class="qty-btn" onclick="changeQty(${item.id},-1)">−</button><span class="qty-val">${item.qty}</span><button class="qty-btn" onclick="changeQty(${item.id},1)">+</button></div><button class="del-btn" onclick="removeItem(${item.id})">×</button></div>`;
+    }).join('')}</div></div>`;
+  }).join('');
+}
+
+function updatePrice(id,val){const l=getList();l.items=l.items.map(i=>i.id===id?{...i,price:parseFloat(val)||0}:i);save();renderLista();}
+function toggle(id){const l=getList();l.items=l.items.map(i=>i.id===id?{...i,done:!i.done}:i);save();renderLista();}
+function removeItem(id){const l=getList();l.items=l.items.filter(i=>i.id!==id);save();renderLista();}
+function changeQty(id,delta){const l=getList();l.items=l.items.map(i=>i.id===id?{...i,qty:Math.max(1,i.qty+delta)}:i);save();renderLista();}
+function clearDone(){const l=getList();l.items=l.items.filter(i=>!i.done);save();renderLista();}
+function vaciarLista(){if(confirm('¿Vaciar esta lista?')){getList().items=[];save();renderLista();}}
+
+var statsPeriodo='mes', statsDesde='', statsHasta='';
+function setStatsPeriodo(p){statsPeriodo=p;renderStats();}
+function isoDe(dt){return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');}
+function regIso(h){
+  if(h.iso)return h.iso;
+  if(h.fecha&&h.fecha.indexOf('/')>-1){const p=h.fecha.split('/');return p[2]+'-'+p[1]+'-'+p[0];}
+  return '0000-00-00';
+}
+function rangoStats(){
+  const now=new Date(),y=now.getFullYear(),m=now.getMonth(),d=now.getDate();
+  if(statsPeriodo==='semana'){const dow=(now.getDay()+6)%7;return {desde:isoDe(new Date(y,m,d-dow)),hasta:isoDe(now)};}
+  if(statsPeriodo==='mes'){return {desde:isoDe(new Date(y,m,1)),hasta:isoDe(now)};}
+  if(statsPeriodo==='rango'){return {desde:statsDesde||'0000-00-00',hasta:statsHasta||'9999-99-99'};}
+  return {desde:'0000-00-00',hasta:'9999-99-99'};
+}
+function renderStats(){
+  document.querySelectorAll('.per-btn').forEach(b=>b.classList.toggle('per-active',b.dataset.p===statsPeriodo));
+  document.getElementById('stats-rango').style.display=statsPeriodo==='rango'?'flex':'none';
+  const hist=loadHistorial();
+  const {desde,hasta}=rangoStats();
+  const reg=hist.filter(h=>{const i=regIso(h);return i>=desde&&i<=hasta;});
+  const total=reg.reduce((s,h)=>s+(h.total||0),0);
+  document.getElementById('stats-total').textContent=fmt(total);
+  document.getElementById('stats-label').textContent=reg.length?(reg.length+' compra'+(reg.length!==1?'s':'')):'Sin compras en este periodo';
+  const pt={},pp={};
+  reg.forEach(h=>{
+    if(h.porTienda)Object.entries(h.porTienda).forEach(([id,a])=>pt[id]=(pt[id]||0)+a);
+    pp[h.formaPago||'?']=(pp[h.formaPago||'?']||0)+(h.total||0);
+  });
+  const nd='<div style="color:#bbb;font-size:13px;padding:8px 0">Sin datos en este periodo</div>';
+  document.getElementById('stats-tiendas').innerHTML=Object.entries(pt).sort((a,b)=>b[1]-a[1]).map(([id,amt])=>{const t=TIENDAS.find(t=>t.id===id);return`<div class="stats-row"><span class="stats-name">${t?t.icon+' '+t.label:'🛒 Sin tienda'}</span><span class="stats-amount">${fmt(amt)}</span></div>`;}).join('')||nd;
+  document.getElementById('stats-pago').innerHTML=Object.entries(pp).sort((a,b)=>b[1]-a[1]).map(([fp,amt])=>{const ic=fp==='Efectivo'?'💵':(fp==='Bizum'?'📲':'💳');return`<div class="stats-row"><span class="stats-name">${ic} ${fp}</span><span class="stats-amount">${fmt(amt)}</span></div>`;}).join('')||nd;
+}
+
+function openPanel(){document.getElementById('add-panel').style.display='block';document.getElementById('fab').style.display='none';setTimeout(()=>document.getElementById('new-name').focus(),100);}
+function closePanel(){document.getElementById('add-panel').style.display='none';document.getElementById('fab').style.display='flex';document.getElementById('new-name').value='';document.getElementById('new-price').value='';newQty=1;document.getElementById('new-qty-val').textContent='1';}
+function changeNewQty(delta){newQty=Math.max(1,newQty+delta);document.getElementById('new-qty-val').textContent=newQty;}
+function addItem(){const name=document.getElementById('new-name').value.trim();if(!name)return;const lista=getList();lista.items.push({id:Date.now(),name,section:document.getElementById('new-section').value,tienda:document.getElementById('new-tienda').value,qty:newQty,price:parseFloat(document.getElementById('new-price').value)||0,done:false});save();renderLista();closePanel();}
+
+function refreshTiendaSelect(){
+  const ts=document.getElementById('new-tienda');
+  ts.innerHTML='';
+  TIENDAS.forEach(t=>{const o=document.createElement('option');o.value=t.id;o.textContent=t.icon+' '+t.label;ts.appendChild(o);});
+}
+function initSelects(){
+  const ss=document.getElementById('new-section');
+  SECTIONS.forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=s.icon+' '+s.label;ss.appendChild(o);});
+  refreshTiendaSelect();
+  ss.value='alimentacion';
+}
+
+// ── GESTOR DE TIENDAS ─────────────────────────────────────────
+function abrirTiendas(){document.getElementById('tiendas-panel').style.display='block';document.getElementById('tiendas-btn').style.display='none';selectedTiendaIcon="🛒";renderTiendasList();renderTiendaIconSelector();}
+function cerrarTiendas(){document.getElementById('tiendas-panel').style.display='none';document.getElementById('tiendas-btn').style.display='block';}
+function renderTiendasList(){
+  document.getElementById('tiendas-list').innerHTML=TIENDAS.map(t=>`<div class="tienda-item"><span class="ti-icon">${t.icon}</span><span class="ti-name">${t.label}</span><button class="tienda-del" onclick="delTienda('${t.id}')">×</button></div>`).join('')||'<div style="color:#bbb;font-size:13px;padding:8px 0">No tienes tiendas todavía</div>';
+}
+function renderTiendaIconSelector(){
+  document.getElementById('tienda-icon-selector').innerHTML=TIENDA_ICONS.map(ic=>`<button class="icon-opt ${ic===selectedTiendaIcon?'selected':''}" onclick="selectTiendaIcon('${ic}')">${ic}</button>`).join('');
+}
+function selectTiendaIcon(ic){selectedTiendaIcon=ic;renderTiendaIconSelector();}
+function addTienda(){
+  const inp=document.getElementById('nueva-tienda-nombre');const name=inp.value.trim();if(!name)return;
+  TIENDAS.push({id:'t'+Date.now(),label:name,icon:selectedTiendaIcon});
+  saveTiendas();refreshTiendaSelect();renderTiendasList();
+  inp.value='';selectedTiendaIcon="🛒";renderTiendaIconSelector();
+}
+function delTienda(id){
+  const t=TIENDAS.find(x=>x.id===id);if(!t)return;
+  if(!confirm(`¿Eliminar la tienda "${t.label}"?`))return;
+  const idx=TIENDAS.findIndex(x=>x.id===id);if(idx>-1)TIENDAS.splice(idx,1);
+  saveTiendas();refreshTiendaSelect();renderTiendasList();
+}
+
+applyTheme(loadTheme());
+load();initSelects();renderHome();
+
+// ── HISTORIAL ─────────────────────────────────────────────────
+function loadHistorial() {
+  try { return JSON.parse(localStorage.getItem('kecompra_historial') || '[]'); } catch { return []; }
+}
+function saveHistorial(h) {
+  try { localStorage.setItem('kecompra_historial', JSON.stringify(h)); } catch {}
+}
+
+function abrirModalPago() {
+  const lista = getList(); if (!lista) return;
+  const total = lista.items.filter(i => i.done && i.price > 0).reduce((s, i) => s + (i.price * i.qty), 0);
+  document.getElementById('modal-pago-total').textContent = 'Total: ' + fmt(total);
+  document.getElementById('modal-pago').classList.add('open');
+}
+function cerrarModalPago() {
+  document.getElementById('modal-pago').classList.remove('open');
+}
+
+function finalizarCompra(formaPago) {
+  const lista = getList(); if (!lista) return;
+  const comprados = lista.items.filter(i => i.done && i.price > 0);
+  const total = comprados.reduce((s, i) => s + (i.price * i.qty), 0);
+  const nProductos = lista.items.filter(i => i.done).length;
+
+  const porTienda = {}, porSeccion = {};
+  comprados.forEach(i => {
+    const sub = i.price * i.qty;
+    porTienda[i.tienda || ''] = (porTienda[i.tienda || ''] || 0) + sub;
+    porSeccion[i.section || ''] = (porSeccion[i.section || ''] || 0) + sub;
+  });
+  const now = new Date();
+
+  const registro = {
+    id: Date.now(),
+    fecha: now.toLocaleDateString('es-ES', {day:'2-digit', month:'2-digit', year:'numeric'}),
+    hora: now.toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'}),
+    iso: now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0'),
+    lista: lista.name,
+    total,
+    formaPago,
+    nProductos,
+    porTienda,
+    porSeccion
+  };
+
+  const historial = loadHistorial();
+  historial.unshift(registro);
+  saveHistorial(historial);
+
+  lista.items = lista.items.filter(i => !i.done);
+  save();
+
+  cerrarModalPago();
+  renderLista();
+  if (confirm('✅ Compra guardada por ' + fmt(total) + '\n\n¿Ver historial?')) {
+    setTab('historial');
+  }
+}
+
+function renderHistorial() {
+  const historial = loadHistorial();
+  const container = document.getElementById('historial-container');
+  if (historial.length === 0) {
+    container.innerHTML = '<div class="historial-empty"><div class="ei">📅</div><div>Sin compras todavía</div><div style="font-size:12px;margin-top:6px;">Finaliza una compra para verla aquí</div></div>';
+    return;
+  }
+
+  const mesActual = new Date().toLocaleDateString('es-ES', {month:'2-digit', year:'numeric'});
+  const totalMes = historial.filter(h => h.fecha.slice(3) === mesActual).reduce((s, h) => s + h.total, 0);
+
+  container.innerHTML = `
+    <div style="background:linear-gradient(135deg,var(--dark1),var(--dark2));border-radius:14px;padding:14px 16px;margin-bottom:16px;border:1px solid color-mix(in srgb, var(--accent) 20%, transparent);">
+      <div style="color:#888;font-size:12px;">💰 Total este mes</div>
+      <div style="color:var(--accent);font-size:28px;font-weight:800;margin-top:4px;">${fmt(totalMes)}</div>
+    </div>
+    ${historial.map(h => `
+      <div class="historial-card">
+        <div class="historial-fecha">${h.fecha} · ${h.hora}</div>
+        <div class="historial-row">
+          <div>
+            <div class="historial-tienda">🛒 ${h.lista}</div>
+            <div class="historial-pago">${h.formaPago === 'Efectivo' ? '💵' : (h.formaPago === 'Bizum' ? '📲' : '💳')} ${h.formaPago} · ${h.nProductos} productos</div>
+          </div>
+          <div class="historial-total">${fmt(h.total)}</div>
+        </div>
+      </div>
+    `).join('')}
+  `;
+}
+
+// ── VOZ ──────────────────────────────────────────────────────
+function startVoice() {
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    alert('Tu navegador no soporta reconocimiento de voz. Usa Safari en iPhone.');
+    return;
+  }
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const recognition = new SpeechRecognition();
+  recognition.lang = 'es-ES';
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
+
+  const btn = document.getElementById('fab-voice');
+  const toast = document.getElementById('voice-toast');
+
+  btn.classList.add('listening');
+  toast.style.display = 'block';
+  toast.textContent = '🎙️ Escuchando... di el nombre del producto';
+
+  recognition.start();
+
+  recognition.onresult = function(event) {
+    const name = event.results[0][0].transcript.trim();
+    toast.textContent = '✅ Añadido: ' + name;
+    setTimeout(() => { toast.style.display = 'none'; }, 2000);
+
+    const nameLower = name.toLowerCase();
+    let tienda = 'mercadona';
+    if (nameLower.includes('mercadona')) tienda = 'mercadona';
+    else if (nameLower.includes('lidl')) tienda = 'lidl';
+    else if (nameLower.includes('carrefour')) tienda = 'carrefour';
+    else if (nameLower.includes('aldi')) tienda = 'aldi';
+    else if (nameLower.includes('día') || nameLower.includes('dia')) tienda = 'dia';
+    else if (nameLower.includes('farmacia')) tienda = 'farmacia';
+
+    let section = 'alimentacion';
+    if (nameLower.includes('leche') || nameLower.includes('yogur') || nameLower.includes('queso') || nameLower.includes('mantequilla')) section = 'lacteos';
+    else if (nameLower.includes('fruta') || nameLower.includes('verdura') || nameLower.includes('naranja') || nameLower.includes('manzana') || nameLower.includes('tomate') || nameLower.includes('lechuga') || nameLower.includes('oliva')) section = 'fruta';
+    else if (nameLower.includes('jamón') || nameLower.includes('jamon') || nameLower.includes('chorizo') || nameLower.includes('salchich') || nameLower.includes('pollo') || nameLower.includes('carne') || nameLower.includes('libritos') || nameLower.includes('huevo')) section = 'charcuteria';
+    else if (nameLower.includes('limpia') || nameLower.includes('limpie') || nameLower.includes('suavizante') || nameLower.includes('detergente') || nameLower.includes('papel') || nameLower.includes('fregona') || nameLower.includes('esponja') || nameLower.includes('lejía') || nameLower.includes('lejia') || nameLower.includes('alcohol') || nameLower.includes('bicarbonato') || nameLower.includes('sosa')) section = 'limpieza';
+    else if (nameLower.includes('farmacia') || nameLower.includes('pastilla') || nameLower.includes('medicamento') || nameLower.includes('vitamina')) section = 'farmacia';
+    else if (nameLower.includes('cerveza') || nameLower.includes('vino') || nameLower.includes('agua') || nameLower.includes('zumo') || nameLower.includes('refresco')) section = 'bebidas';
+
+    const lista = getList();
+    if (lista) {
+      lista.items.push({
+        id: Date.now(), name,
+        section, tienda,
+        qty: 1, price: 0, done: false
+      });
+      save(); renderLista();
+    }
+  };
+
+  recognition.onerror = function(e) {
+    toast.textContent = '❌ No te he entendido, inténtalo de nuevo';
+    setTimeout(() => { toast.style.display = 'none'; }, 2000);
+  };
+
+  recognition.onend = function() {
+    btn.classList.remove('listening');
+  };
+}
+</script>
+
+<script>
+(function(){
+var wrap=document.createElement('div');
+wrap.style.cssText='margin-top:20px';
+wrap.innerHTML='<div class="section-title">Copia de seguridad</div>'
++'<div style="display:flex;gap:8px">'
++'<button id="kk-export" style="flex:1;padding:14px;border:none;border-radius:14px;background:var(--dark1);color:var(--accent);font-weight:700;font-size:14px;font-family:inherit">💾 Exportar</button>'
++'<button id="kk-import" style="flex:1;padding:14px;border:1.5px solid var(--line);border-radius:14px;background:#fff;color:#666;font-weight:700;font-size:14px;font-family:inherit">📂 Importar</button>'
++'</div><input type="file" id="kk-file" accept=".json,application/json" style="display:none">';
+document.getElementById('home-view').appendChild(wrap);
+document.getElementById('kk-export').onclick=async function(){
+var data={};for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);data[k]=localStorage.getItem(k);}
+var fecha=new Date().toISOString().slice(0,10);
+var file=new File([JSON.stringify(data)],'KeCompra-backup-'+fecha+'.json',{type:'application/json'});
+if(navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],title:'Backup KeCompra'});return;}catch(e){}}
+var a=document.createElement('a');a.href=URL.createObjectURL(file);a.download=file.name;a.click();
+};
+document.getElementById('kk-import').onclick=function(){document.getElementById('kk-file').click();};
+document.getElementById('kk-file').onchange=function(ev){
+var f=ev.target.files[0];if(!f)return;
+var r=new FileReader();
+r.onload=function(){try{var data=JSON.parse(r.result);if(!confirm('¿Restaurar copia? Se reemplazarán los datos actuales.'))return;localStorage.clear();for(var k in data)localStorage.setItem(k,data[k]);alert('✅ Copia restaurada');location.reload();}catch(e){alert('❌ Archivo no válido');}};
+r.readAsText(f);
+};
+})();
+</script>
+
+<script>
+(function(){
+var WORKER_URL='https://kekocompra-scanner.kekosoa.workers.dev/';
+var wrap=document.createElement('div');
+wrap.style.cssText='margin-top:14px';
+wrap.innerHTML='<button id="kk-scan" style="width:100%;padding:16px;border:none;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-weight:800;font-size:15px;font-family:inherit">📸 Escanear ticket</button>'
++'<input type="file" id="kk-scan-file" accept="image/*" capture="environment" style="display:none">'
++'<div id="kk-scan-status" style="text-align:center;color:#999;font-size:13px;margin-top:8px;display:none"></div>';
+document.getElementById('home-view').appendChild(wrap);
+var st=document.getElementById('kk-scan-status');
+document.getElementById('kk-scan').onclick=function(){document.getElementById('kk-scan-file').click();};
+document.getElementById('kk-scan-file').onchange=function(ev){
+  var f=ev.target.files[0];if(!f)return;
+  st.style.display='block';st.textContent='⏳ Leyendo ticket con IA...';
+  var img=new Image();
+  img.onload=function(){
+    var c=document.createElement('canvas');var max=1400;var sc=Math.min(1,max/Math.max(img.width,img.height));
+    c.width=img.width*sc;c.height=img.height*sc;
+    c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+    var b64=c.toDataURL('image/jpeg',0.85).split(',')[1];
+    fetch(WORKER_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image:b64,media_type:'image/jpeg'})})
+    .then(function(r){return r.json();})
+    .then(function(t){
+      if(!t.items||!t.items.length){st.textContent='❌ No se pudo leer el ticket. Prueba con mejor luz.';return;}
+      var raw=localStorage.getItem('kecompra_v3');var listas=raw?JSON.parse(raw):[];
+      var lista={id:'ticket-'+Date.now(),name:'🧾 '+(t.tienda||'Ticket')+' '+(t.fecha||''),icon:'🧾',items:[]};
+      t.items.forEach(function(it,i){
+        lista.items.push({id:Date.now()+i,name:it.name,section:it.section||'alimentacion',tienda:'',qty:it.qty||1,price:it.price||0,done:true});
+      });
+      listas.push(lista);
+      localStorage.setItem('kecompra_v3',JSON.stringify(listas));
+      st.textContent='✅ '+t.items.length+' productos importados ('+(t.total||'?')+'€). Recargando...';
+      setTimeout(function(){location.reload();},1200);
+    })
+    .catch(function(e){st.textContent='❌ Error: '+e.message;});
+  };
+  var rd=new FileReader();rd.onload=function(){img.src=rd.result;};rd.readAsDataURL(f);
+};
+})();
+</script>
+
+<script>
+(function(){
+var WORKER_URL='https://kekocompra-scanner.kekosoa.workers.dev/';
+var wrap=document.createElement('div');
+wrap.style.cssText='margin-top:10px';
+wrap.innerHTML='<button id="kk-pizarra" style="width:100%;padding:16px;border:none;border-radius:14px;background:linear-gradient(135deg,var(--dark1),var(--dark2));color:var(--accent);font-weight:800;font-size:15px;font-family:inherit">📋 Escanear pizarra</button>'
++'<input type="file" id="kk-pizarra-file" accept="image/*" capture="environment" style="display:none">'
++'<div id="kk-pizarra-status" style="text-align:center;color:#999;font-size:13px;margin-top:8px;display:none"></div>';
+document.getElementById('home-view').appendChild(wrap);
+var st=document.getElementById('kk-pizarra-status');
+document.getElementById('kk-pizarra').onclick=function(){document.getElementById('kk-pizarra-file').click();};
+document.getElementById('kk-pizarra-file').onchange=function(ev){
+  var f=ev.target.files[0];if(!f)return;
+  st.style.display='block';st.textContent='⏳ Leyendo pizarra con IA...';
+  var img=new Image();
+  img.onload=function(){
+    var c=document.createElement('canvas');var max=1400;var sc=Math.min(1,max/Math.max(img.width,img.height));
+    c.width=img.width*sc;c.height=img.height*sc;
+    c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+    var b64=c.toDataURL('image/jpeg',0.85).split(',')[1];
+    fetch(WORKER_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image:b64,media_type:'image/jpeg',mode:'pizarra'})})
+    .then(function(r){return r.json();})
+    .then(function(t){
+      if(!t.items||!t.items.length){st.textContent='❌ No se pudo leer la pizarra. Prueba con mejor luz.';return;}
+      var raw=localStorage.getItem('kecompra_v3');var listas=raw?JSON.parse(raw):[];
+      var lista={id:'pizarra-'+Date.now(),name:'📋 Pizarra '+new Date().toLocaleDateString('es-ES'),icon:'📋',items:[]};
+      t.items.forEach(function(it,i){
+        lista.items.push({id:Date.now()+i,name:it.name,section:it.section||'alimentacion',tienda:'',qty:it.qty||1,price:it.price||0,done:false});
+      });
+      listas.push(lista);
+      localStorage.setItem('kecompra_v3',JSON.stringify(listas));
+      st.textContent='✅ '+t.items.length+' productos en tu nueva lista. Recargando...';
+      setTimeout(function(){location.reload();},1200);
+    })
+    .catch(function(e){st.textContent='❌ Error: '+e.message;});
+  };
+  var rd=new FileReader();rd.onload=function(){img.src=rd.result;};rd.readAsDataURL(f);
+};
+})();
+</script>
+</body>
+</html>
