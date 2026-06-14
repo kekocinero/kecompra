@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Cómo usar KeCompra 🛒</title>
+<style>
+  :root{
+    --accent:#FF7A1A; --accent2:#FF9D52;
+    --dark1:#1a1a1a; --dark2:#241a12;
+    --bg:#f3f3f5; --card:#ffffff;
+    --ink:#1a1a1a; --muted:#8a8a90; --line:#ececf0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.5;padding-bottom:40px;}
+  .wrap{max-width:520px;margin:0 auto;}
+  header{background:linear-gradient(160deg,var(--dark1),var(--dark2));color:#fff;text-align:center;
+    padding:38px 24px 46px;border-radius:0 0 28px 28px;position:relative;overflow:hidden;}
+  header::after{content:"";position:absolute;top:0;left:0;right:0;height:5px;background:var(--accent);}
+  .cart{font-size:54px;line-height:1;filter:drop-shadow(0 0 18px rgba(255,122,26,.55));}
+  header h1{font-size:30px;font-weight:800;letter-spacing:-.5px;margin-top:10px;}
+  header h1 b{color:var(--accent);}
+  header p{color:#c9c9cf;font-size:14px;margin-top:6px;}
+  .badge{display:inline-block;margin-top:18px;background:rgba(255,122,26,.16);color:var(--accent2);
+    font-size:13px;font-weight:700;padding:8px 16px;border-radius:20px;}
+  .steps{padding:26px 18px 8px;}
+  .eyebrow{font-size:12px;font-weight:800;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin:0 6px 14px;}
+  .step{background:var(--card);border-radius:18px;padding:18px;margin-bottom:14px;display:flex;gap:16px;
+    align-items:flex-start;box-shadow:0 2px 10px rgba(0,0,0,.04);}
+  .num{flex:0 0 auto;width:42px;height:42px;border-radius:13px;
+    background:linear-gradient(160deg,var(--accent),var(--accent2));color:#fff;font-weight:800;font-size:19px;
+    display:flex;align-items:center;justify-content:center;}
+  .step .body{flex:1;}
+  .step .ico{font-size:22px;}
+  .step h3{font-size:17px;font-weight:800;margin:2px 0 4px;}
+  .step p{font-size:15px;color:#4a4a52;}
+  .step .tip{display:block;margin-top:8px;font-size:13px;color:var(--muted);}
+  .ways{margin-top:10px;border-top:1px dashed var(--line);padding-top:10px;}
+  .way{display:flex;gap:9px;align-items:center;font-size:14px;color:#4a4a52;padding:4px 0;}
+  .way b{font-weight:700;color:var(--ink);}
+  .idea{margin:24px 18px 0;background:linear-gradient(160deg,var(--dark1),var(--dark2));color:#fff;
+    border-radius:22px;padding:26px 22px;text-align:center;position:relative;overflow:hidden;}
+  .idea::after{content:"";position:absolute;top:0;left:0;right:0;height:5px;background:var(--accent);}
+  .idea .big{font-size:34px;}
+  .idea h2{font-size:21px;font-weight:800;margin:8px 0 6px;}
+  .idea p{color:#c9c9cf;font-size:14px;margin-bottom:18px;}
+  .btn{display:block;width:100%;padding:16px;border:none;border-radius:15px;font-family:inherit;
+    font-weight:800;font-size:16px;cursor:pointer;text-decoration:none;text-align:center;margin-top:10px;}
+  .btn-idea{background:var(--accent);color:#fff;}
+  .btn-app{background:rgba(255,255,255,.12);color:#fff;}
+  footer{text-align:center;color:var(--muted);font-size:12px;margin-top:26px;padding:0 24px;}
+  footer b{color:var(--accent);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="cart">🛒</div>
+    <h1>Ke<b>Compra</b></h1>
+    <p>Tu lista de la compra, fácil y rápida</p>
+    <div class="badge">📖 Guía para empezar</div>
+  </header>
+
+  <div class="steps">
+    <div class="eyebrow">Paso a paso</div>
+
+    <div class="step"><div class="num">1</div><div class="body">
+      <div class="ico">🛒</div><h3>Abre la app</h3>
+      <p>Toca el icono del carrito en tu móvil. Ya está, no hay que registrarse en nada.</p>
+    </div></div>
+
+    <div class="step"><div class="num">2</div><div class="body">
+      <div class="ico">➕</div><h3>Crea tu lista</h3>
+      <p>Pulsa <b>“+ Nueva lista”</b>, ponle un nombre (ej. “Súper”) y dale a crear.</p>
+    </div></div>
+
+    <div class="step"><div class="num">3</div><div class="body">
+      <div class="ico">🥖</div><h3>Añade productos</h3>
+      <p>Tienes 3 maneras, la que más te guste:</p>
+      <div class="ways">
+        <div class="way">✍️ <span><b>Escribir:</b> toca el botón <b>+</b> y escribe (ej. “Leche”).</span></div>
+        <div class="way">🎙️ <span><b>Hablar:</b> toca el micro y di el producto en voz alta.</span></div>
+        <div class="way">📋 <span><b>Foto a la pizarra:</b> haz foto a tu nota y la app la convierte en lista.</span></div>
+      </div>
+    </div></div>
+
+    <div class="step"><div class="num">4</div><div class="body">
+      <div class="ico">📸</div><h3>Escanea el ticket</h3>
+      <p>Después de comprar, haz una foto al ticket. La app apunta los productos y los precios solos.</p>
+      <span class="tip">Así la app va recordando lo que sueles comprar y a qué precio.</span>
+    </div></div>
+
+    <div class="step"><div class="num">5</div><div class="body">
+      <div class="ico">📦</div><h3>Ordenado por departamentos</h3>
+      <p>Dentro de una lista, la pestaña <b>“Sección”</b> agrupa los productos por departamento (alimentación, lácteos, limpieza…) y la pestaña <b>“Tienda”</b> los agrupa por dónde los compras.</p>
+      <span class="tip">Así en el súper vas directo, sin dar vueltas.</span>
+    </div></div>
+
+    <div class="step"><div class="num">6</div><div class="body">
+      <div class="ico">🏪</div><h3>Tus tiendas</h3>
+      <p>En <b>“Gestionar mis tiendas”</b> puedes añadir las tuyas (Mercadona, DIA, Bonpreu…) o borrar las que no uses.</p>
+    </div></div>
+
+    <div class="step"><div class="num">7</div><div class="body">
+      <div class="ico">⭐</div><h3>Lo de siempre, rápido</h3>
+      <p>Al añadir un producto, arriba salen tus <b>Frecuentes</b>: lo que más compras. Tócalo y se añade al momento, con su precio.</p>
+    </div></div>
+
+    <div class="step"><div class="num">8</div><div class="body">
+      <div class="ico">✅</div><h3>Ve marcando</h3>
+      <p>Mientras compras, toca cada producto que metes en el carro. Se tacha y sabes lo que te falta.</p>
+    </div></div>
+
+    <div class="step"><div class="num">9</div><div class="body">
+      <div class="ico">💳</div><h3>Termina la compra</h3>
+      <p>Pulsa <b>“Finalizar compra”</b> y elige cómo pagaste: tarjeta, efectivo o Bizum. Queda guardado.</p>
+    </div></div>
+
+    <div class="step"><div class="num">10</div><div class="body">
+      <div class="ico">📊</div><h3>Mira tus gastos</h3>
+      <p>En la pestaña <b>“Gastos”</b> ves cuánto llevas por <b>semana</b>, por <b>mes</b> o <b>entre fechas</b>, y por tienda.</p>
+    </div></div>
+
+    <div class="step"><div class="num">11</div><div class="body">
+      <div class="ico">📅</div><h3>Historial</h3>
+      <p>En <b>“Historial”</b> tienes todas tus compras anteriores: qué día, cuánto y cómo pagaste.</p>
+    </div></div>
+
+    <div class="step"><div class="num">12</div><div class="body">
+      <div class="ico">🎨</div><h3>Ponla a tu gusto</h3>
+      <p>Arriba puedes cambiar el <b>color</b> y el <b>idioma</b> (castellano o catalán). A tu manera.</p>
+    </div></div>
+
+    <div class="step"><div class="num">13</div><div class="body">
+      <div class="ico">💾</div><h3>Guarda una copia</h3>
+      <p>Con <b>“Exportar”</b> guardas tus listas por si cambias de móvil. Con <b>“Importar”</b> las recuperas.</p>
+      <span class="tip">Hazlo de vez en cuando, así nunca pierdes nada.</span>
+    </div></div>
+  </div>
+
+  <div class="idea">
+    <div class="big">💡</div>
+    <h2>¿Se te ocurre una mejora?</h2>
+    <p>Si echas algo en falta o tienes una idea para que la app sea mejor, cuéntamelo. ¡Se puede aplicar!</p>
+    <a class="btn btn-idea" href="https://docs.google.com/forms/d/e/1FAIpQLSd1RKOgKWni1yie5mHpJcKfIp1IevDtY6q6OBPRR2kBbixcqw/viewform" target="_blank" rel="noopener">💡 Enviar mi idea</a>
+    <a class="btn btn-app" href="https://kekocinero.github.io/kecompra/" target="_blank" rel="noopener">🛒 Abrir KeCompra</a>
+  </div>
+
+  <footer>Hecho con cariño por <b>Kekocinero</b> · poquet a poquet 🟠</footer>
+
+</div>
+</body>
+</html>
